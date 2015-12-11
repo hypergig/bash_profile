@@ -1,8 +1,10 @@
-# property_file.sh looks like, needs to be in the ~ directory 
+#! /bin/bash
+
+# property_file.sh looks like, needs to be in the $HOME directory 
 # export private_docker_repo=something.io/this
 # export most_common_repo=foo
 #
-. property_file.sh
+. $HOME/property_file.sh
 
 echo Hello Jordan.
 
@@ -24,13 +26,13 @@ docker-happy-compose(){
 
 alias ll='ls -lahpr'
 
-export repos_dir='~/repos'
+export repos_dir="$HOME/repos"
 
 alias gr="cd $repos_dir"
 alias ga="cd $repos_dir/$most_common_repo"
 
 
-ANSIBLE_CONFIG="/Users/jordan/$repos_dir/$most_common_repo/tools/ansible/ansible.cfg"
+ANSIBLE_CONFIG="$repos_dir/$most_common_repo/tools/ansible/ansible.cfg"
 export ANSIBLE_CONFIG
 
 if [ -f "$(brew --prefix bash-git-prompt)/share/gitprompt.sh" ]; then
