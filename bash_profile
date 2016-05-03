@@ -13,6 +13,11 @@ export PATH=/usr/local/bin:$PATH
 export EDITOR='subl -w'
 export DOCKER_MACHINE_NAME='dev'
 export repos_dir="$HOME/repos"
+export FAV_CONTAINERS='alpine:latest\n
+                       busybox:latest\n
+                       java:latest\n
+                       jenkins:latest\n
+                       quay.io/coreos/etcd:v2.2.0\n'
 
 # docker functions
 docker-dedangle(){
@@ -23,15 +28,21 @@ docker-refresh(){
   docker images | grep "$private_docker_repo" | awk '{ print $1 ":" $2 }' | xargs -I {} -P10 docker pull {} | grep Status
 }
 
+docker-prewarm(){
+  echo -e $FAV_CONTAINERS | xargs -I {} -P10 docker pull {} | grep Status
+}
+
 docker-happy-compose(){
   nosetests && docker-compose rm -f && docker-compose build && docker-compose up
 }
 
 docker-machine-reboot(){
-  docker-machine restart $DOCKER_MACHINE_NAME && docker-machine regenerate-certs -f $DOCKER_MACHINE_NAME && docker-environment
+  docker-machine restart $DOCKER_MACHINE_NAME && \
+  docker-machine regenerate-certs -f $DOCKER_MACHINE_NAME && \
+  docker-machine-environment
 }
 
-docker-environment(){
+docker-machine-environment(){
   docker_machine_count=$(docker-machine ls --quiet | wc -l)
   if [ $docker_machine_count -ne 0 ]
   then
@@ -60,7 +71,8 @@ docker-machine-make(){
     echo "docker machine already created"
   fi
 
-  docker-environment
+  docker-machine-environment
+  docker-prewarm
 }
 
 docker-machine-rebuild(){
@@ -88,5 +100,5 @@ if [ -f $(brew --prefix)/etc/bash_completion ]; then
 fi
 
 # run every terminal 
-docker-environment
+docker-machine-environment
 echo $BASH_VERSION
