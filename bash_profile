@@ -17,7 +17,8 @@ export FAV_CONTAINERS='alpine:latest\n
                        busybox:latest\n
                        java:latest\n
                        jenkins:latest\n
-                       quay.io/coreos/etcd:v2.2.0\n'
+                       quay.io/coreos/etcd:v2.2.0\n
+                       python:2\n'
 
 # docker functions
 docker-dedangle(){
