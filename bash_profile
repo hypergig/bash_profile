@@ -13,12 +13,13 @@ export PATH=/usr/local/bin:$PATH
 export EDITOR='subl -w'
 export DOCKER_MACHINE_NAME='dev'
 export repos_dir="$HOME/repos"
-export FAV_CONTAINERS='alpine:latest\n
+export FAV_CONTAINERS="alpine:latest\n
                        busybox:latest\n
                        java:latest\n
                        jenkins:latest\n
                        quay.io/coreos/etcd:v2.2.0\n
-                       python:2\n'
+                       python:2\n
+                       $private_docker_repo/jessie\n"
 
 # docker functions
 docker-dedangle(){
