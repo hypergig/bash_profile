@@ -35,7 +35,7 @@ docker-prewarm(){
 }
 
 docker-happy-compose(){
-  nosetests && docker-compose rm -f && docker-compose build && docker-compose up
+  nosetests && docker-compose rm --force --all && docker-compose build && docker-compose up
 }
 
 docker-machine-reboot(){
