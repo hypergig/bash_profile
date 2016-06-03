@@ -87,8 +87,17 @@ alias gr="cd $repos_dir"
 alias ga="cd $repos_dir/$most_common_repo"
 
 # ansible stuff
+. ~/.virtualenv-profile.sh
+
 ANSIBLE_CONFIG="$repos_dir/$most_common_repo/tools/ansible/ansible.cfg"
 export ANSIBLE_CONFIG
+
+update-manifests(){
+  cd "$repos_dir/$most_common_repo/tools/ansible"
+  workon ansible-1
+  grep -e '^externally_versioned: True' group_vars/environment_*/main.yml | sed 's/group_vars\/environment_//' | sed 's/\/.*//' | xargs -P 10 -I {} ansible-playbook -i inventory/{} update_submodules.yml
+  cd -
+}
 
 # brew stuff
 if [ -f "$(brew --prefix bash-git-prompt)/share/gitprompt.sh" ]; then
