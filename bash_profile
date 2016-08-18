@@ -38,49 +38,6 @@ docker-happy-compose(){
   nosetests && docker-compose rm --force --all && docker-compose build && docker-compose up
 }
 
-docker-machine-reboot(){
-  docker-machine restart $DOCKER_MACHINE_NAME && \
-  docker-machine regenerate-certs -f $DOCKER_MACHINE_NAME && \
-  docker-machine-environment
-}
-
-docker-machine-environment(){
-  docker_machine_count=$(docker-machine ls --quiet | wc -l)
-  if [ $docker_machine_count -ne 0 ]
-  then
-    if [ $(docker-machine status $DOCKER_MACHINE_NAME) == "Running" ]
-    then
-      eval "$(docker-machine env $DOCKER_MACHINE_NAME)"
-      echo "docker host: $DOCKER_HOST"
-    else
-      echo "docker not running"
-    fi
-  else
-    echo "no docker machines created"
-  fi
-}
-
-docker-machine-make(){
-  docker_machine_count=$(docker-machine ls --quiet | wc -l)
-  if [ $docker_machine_count -eq 0 ]
-  then
-    docker-machine create \
-      --driver "virtualbox" \
-      --virtualbox-cpu-count "2" \
-      --virtualbox-memory "2096" \
-      $DOCKER_MACHINE_NAME 
-  else
-    echo "docker machine already created"
-  fi
-
-  docker-machine-environment
-  docker-prewarm
-}
-
-docker-machine-rebuild(){
-  docker-machine rm -f $DOCKER_MACHINE_NAME && docker-machine-make
-}
-
 # aliases 
 alias ll='ls -lahpr'
 alias gr="cd $repos_dir"
@@ -105,5 +62,4 @@ if [ -f $(brew --prefix)/etc/bash_completion ]; then
 fi
 
 # run every terminal 
-docker-machine-environment
 echo $BASH_VERSION
