@@ -19,7 +19,9 @@ export FAV_CONTAINERS="alpine:latest\n
                        jenkins:latest\n
                        quay.io/coreos/etcd:v2.2.0\n
                        python:2\n
-                       $private_docker_repo/jessie\n"
+                       $private_docker_repo/jessie\n
+                       ethereum/client-go:latest\n
+                       kylemanna/bitcoind:latest\n"
 
 # docker functions
 docker-dedangle(){
