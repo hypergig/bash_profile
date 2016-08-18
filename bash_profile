@@ -44,9 +44,6 @@ alias gr="cd $repos_dir"
 alias ga="cd $repos_dir/$most_common_repo"
 
 # ansible stuff
-. ~/.virtualenv-profile.sh
-echo virtenv loaded
-
 ANSIBLE_CONFIG="$repos_dir/$most_common_repo/tools/ansible/ansible.cfg"
 export ANSIBLE_CONFIG
 
@@ -63,3 +60,5 @@ fi
 
 # run every terminal 
 echo $BASH_VERSION
+. ~/.virtualenv-profile.sh
+echo virtenv loaded
