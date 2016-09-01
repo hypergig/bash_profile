@@ -40,6 +40,10 @@ docker-happy-compose(){
   nosetests && docker-compose rm --force --all && docker-compose build && docker-compose up
 }
 
+docker-reboot(){
+  kill $(ps aux | grep com.docker.hyperkit | grep -v grep | awk '{ print $2 }')
+}
+
 # aliases 
 alias ll='ls -lahpr'
 alias gr="cd $repos_dir"
