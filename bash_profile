@@ -51,6 +51,13 @@ docker-reboot(){
   kill $(ps aux | grep com.docker.hyperkit | grep -v grep | awk '{ print $2 }')
 }
 
+docker-nuke(){
+  docker ps -aq | xargs docker rm -fv
+  docker volume ls -q | xargs docker volume rm
+  docker images -aq | xargs docker rmi -f
+  docker-reboot
+}
+
 # aliases 
 alias ll='ls -lahpr'
 alias gr="cd $repos_dir"
