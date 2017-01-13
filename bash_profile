@@ -56,6 +56,9 @@ docker-nuke(){
   docker volume ls -q | xargs docker volume rm
   docker images -aq | xargs docker rmi -f
   docker-reboot
+  sleep 3
+  until docker images --all; do sleep 1; done
+  echo 'docker is up!'
 }
 
 # aliases 
