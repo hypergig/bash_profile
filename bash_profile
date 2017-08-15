@@ -4,7 +4,7 @@
 # export private_docker_repo=something.io/this
 # export most_common_repo=foo
 #
-. $HOME/property_file.sh
+# . $HOME/property_file.sh
 
 echo "Hello $USER."
 
@@ -16,7 +16,7 @@ shopt -s histappend                      # append to history, don't overwrite it
 shopt -s checkwinsize
 
 # default vars
-export PATH=/usr/local/bin:$PATH
+export PATH="/usr/local/bin:$PATH"
 export EDITOR='subl -w'
 export DOCKER_MACHINE_NAME='dev'
 export repos_dir="$HOME/repos"
@@ -26,7 +26,6 @@ export FAV_CONTAINERS="alpine:latest\n
                        jenkins:latest\n
                        quay.io/coreos/etcd:v2.2.0\n
                        python:2\n
-                       $private_docker_repo/jessie\n
                        ethereum/client-go:latest\n
                        kylemanna/bitcoind:latest\n"
 
@@ -66,22 +65,17 @@ alias ll='ls -lahpr'
 alias gr="cd $repos_dir"
 alias ga="cd $repos_dir/$most_common_repo"
 
-# ansible stuff
-ANSIBLE_CONFIG="$repos_dir/$most_common_repo/tools/ansible/ansible.cfg"
-export ANSIBLE_CONFIG
-
-# brew stuff
-if [ -f /usr/local/share/gitprompt.sh ]; then
-  GIT_PROMPT_THEME=Default
-  GIT_PROMPT_ONLY_IN_REPO=1
-  . /usr/local/share/gitprompt.sh
+# git bash prompt
+GIT_PROMPT_ONLY_IN_REPO=1
+GIT_PROMPT_THEME=Solarized
+if [ -f "/usr/local/opt/bash-git-prompt/share/gitprompt.sh" ]; then
+  __GIT_PROMPT_DIR="/usr/local/opt/bash-git-prompt/share"
+  source "/usr/local/opt/bash-git-prompt/share/gitprompt.sh"
 fi
 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-	. $(brew --prefix)/etc/bash_completion
-fi
+# bash completion
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
-# run every terminal 
+# run every terminal
 echo $BASH_VERSION
-. ~/.virtualenv-profile.sh
-echo virtenv loaded
+
