@@ -1,14 +1,14 @@
 #! /bin/bash
 
-# property_file.sh looks like, needs to be in the $HOME directory 
+# property_file.sh looks like, needs to be in the $HOME directory
 # export private_docker_repo=something.io/this
 # export most_common_repo=foo
 #
-# . $HOME/property_file.sh
-
-echo "Hello $USER."
+. $HOME/property_file.sh
 
 # terminal hacks
+export CLICOLOR=1
+export LSCOLORS=GxBxCxDxexegedabagaced
 export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
 export HISTSIZE=100000                   # big big history
 export HISTFILESIZE=100000               # big big history
@@ -16,6 +16,7 @@ shopt -s histappend                      # append to history, don't overwrite it
 shopt -s checkwinsize
 
 # default vars
+export PATH="/usr/local/opt/python/libexec/bin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 export EDITOR='subl -w'
 export DOCKER_MACHINE_NAME='dev'
@@ -34,7 +35,7 @@ docker-dedangle(){
   docker rmi -f $(docker images -q --filter "dangling=true")
 }
 
-docker-refresh(){  
+docker-refresh(){
   docker images | grep "$private_docker_repo" | awk '{ print $1 ":" $2 }' | xargs -I {} -P10 docker pull {} | grep Status
 }
 
@@ -60,7 +61,7 @@ docker-nuke(){
   echo 'docker is up!'
 }
 
-# aliases 
+# aliases
 alias ll='ls -lahpr'
 alias gr="cd $repos_dir"
 alias ga="cd $repos_dir/$most_common_repo"
@@ -76,6 +77,4 @@ fi
 # bash completion
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
-# run every terminal
-echo $BASH_VERSION
-
+screenfetch
