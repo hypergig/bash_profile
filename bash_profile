@@ -77,4 +77,5 @@ fi
 # bash completion
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
-screenfetch
+# screenfetch
+docker run -t hypergig/parrotsay
