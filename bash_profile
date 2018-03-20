@@ -51,8 +51,12 @@ docker-reboot(){
   kill $(ps aux | grep com.docker.hyperkit | grep -v grep | awk '{ print $2 }')
 }
 
-docker-nuke(){
+docker-kill-all(){
   docker ps -aq | xargs docker rm -fv
+}
+
+docker-nuke(){
+  docker-kill-all
   docker volume ls -q | xargs docker volume rm
   docker images -aq | xargs docker rmi -f
   docker-reboot
