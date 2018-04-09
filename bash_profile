@@ -21,6 +21,8 @@ export PATH="/usr/local/bin:$PATH"
 export EDITOR='subl -w'
 export DOCKER_MACHINE_NAME='dev'
 export repos_dir="$HOME/repos"
+export bash_profile_loc="$(dirname $(readlink ${BASH_SOURCE[0]}))"
+export bash_profile_lib_loc="${bash_profile_loc}/lib"
 export FAV_CONTAINERS="alpine:latest\n
                        busybox:latest\n
                        java:latest\n
@@ -69,6 +71,7 @@ docker-nuke(){
 alias ll='ls -lahpr'
 alias gr="cd $repos_dir"
 alias ga="cd $repos_dir/$most_common_repo"
+alias jork="${bash_profile_lib_loc}/jork.sh"
 
 # git bash prompt
 GIT_PROMPT_ONLY_IN_REPO=1
