@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Jordan Fork
+# jordan fork
 # because impatience is one of the 3 great virtues of a programmer
 # http://threevirtues.com/
 
@@ -37,28 +37,42 @@ colors=(
 
 stdout(){
   while read; do
-    printf "\e[${colors[$1]}mp${1} out | %s\e[m\n" "$REPLY"
+    printf "\e[${colors[$1]}mj${1} out | %s\e[m\n" "$REPLY"
   done
 }
 
 
 stderr(){
   while read; do
-    printf "\e[0;31mp${1} err | %s\e[m\n" "$REPLY" 1>&2
+    printf "\e[0;31mj${1} err | %s\e[m\n" "$REPLY" 1>&2
   done
 }
 
+# catch a failed command and set the return code
+return_code=0
+trap "return_code=1" USR1
 
 i=0
 while read; do
   {
     exec 2> >(stderr $i)
     exec > >(stdout $i)
-    eval "$REPLY"
-  }&
 
+    bash <<< "$REPLY"
+    rc=$?
+
+    msg=">>> EXIT $rc <<<"
+    if [ $rc -ne 0 ]; then
+      echo "$msg" 1>&2
+      kill -USR1 $$
+    else
+      echo "$msg"
+    fi
+  }&
 
   i=$(((i + 1) % 13))
 done
 
-wait
+# signals stop the `wait` command so you need need to resume after the trap
+until wait; do :;done
+exit $return_code
