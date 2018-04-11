@@ -3,60 +3,40 @@
 # jordan fork
 # because impatience is one of the 3 great virtues of a programmer
 # http://threevirtues.com/
+#
+# helpful https://misc.flogisoft.com/bash/tip_colors_and_formatting
+#
 
-
-colors=(
-  # green
-  '0;32'
-  # brown/orange
-  '0;33'
-  # blue
-  '0;34'
-  # purple
-  '0;35'
-  # cyan
-  '0;36'
-  # light gray
-  '0;37'
-  # dark gray
-  '1;30'
-  # light green
-  '1;32'
-  # yellow
-  '1;33'
-  # light blue
-  '1;34'
-  # light purple
-  '1;35'
-  # light cyan
-  '1;36'
-  # white
-  '1;37'
-)
+# blacklist colors that difficult to see against black or white backgrounds
+blacklist=(0 1 7 9 {15..18} {232..235} {250..255})
+colors=($(printf '%d\n' {0..255} ${blacklist[@]} | sort -n | uniq -u | sort -R))
 
 
 stdout(){
+  job=$1
+  color=$((job % ${#colors[@]}))
   while read; do
-    printf "\e[${colors[$1]}mj${1} out | %s\e[m\n" "$REPLY"
+    printf "\e[38;5;${colors[$color]}mj${job} out | %s\e[0m\n" "$REPLY"
   done
 }
 
 
 stderr(){
+  job=$1
   while read; do
-    printf "\e[0;31mj${1} err | %s\e[m\n" "$REPLY" 1>&2
+    printf "\e[1;31mj${job} err | %s\e[0m\n" "$REPLY" 1>&2
   done
 }
 
-# catch a failed command and set the return code
-return_code=0
-trap "return_code=1" USR1
 
-i=0
+# trap when a command fails and exit out
+trap "printf '\e[1;31m%s\e[0m\n' 'NON-ZERO RETURN CODE - ABORTING!' 1>&2; exit 1" USR1
+
+job=0
 while read; do
   {
-    exec 2> >(stderr $i)
-    exec > >(stdout $i)
+    exec 2> >(stderr $job)
+    exec > >(stdout $job)
 
     bash <<< "$REPLY"
     rc=$?
@@ -70,9 +50,7 @@ while read; do
     fi
   }&
 
-  i=$(((i + 1) % 13))
+  job=$((job + 1))
 done
 
-# signals stop the `wait` command so you need need to resume after the trap
-until wait; do :;done
-exit $return_code
+wait
