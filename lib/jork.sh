@@ -28,9 +28,28 @@ stderr(){
   done
 }
 
+cleanup(){
+  # blow out all jobs for 5 seconds
+  # helps get around any race conditions
+  start=$SECONDS
+  while [ $((SECONDS - start)) -lt 5 ]; do
+    running_jobs="$(jobs -rp)"
+    running_jobs=$(printf '%s,' $running_jobs)
+    running_jobs="${running_jobs%,}"
+    if [ ! -z "$running_jobs" ]; then
+      echo "cleaning up jobs: $running_jobs"
+      pkill -P "$running_jobs"
+    fi
+  done
+  echo "clean up done"
+
+}
 
 # trap when a command fails and exit out
-trap "printf '\e[1;31m%s\e[0m\n' 'NON-ZERO RETURN CODE - ABORTING!' 1>&2; exit 1" USR1
+trap "printf '\e[1;31m%s\e[0m\n' 'NON-ZERO RETURN CODE - ABORTING!' 1>&2; cleanup; exit 1" USR1
+
+# cleanup if stopped
+trap "cleanup" SIGTERM SIGINT
 
 job=0
 while read; do
