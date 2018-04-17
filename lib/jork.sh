@@ -8,7 +8,7 @@
 #
 
 # blacklist colors that difficult to see against black or white backgrounds
-blacklist=(0 1 7 9 {15..18} {232..235} {250..255})
+blacklist=(0 1 7 9 11 {15..18} {154..161} {190..197} {226..235} {250..255})
 colors=($(printf '%d\n' {0..255} ${blacklist[@]} | sort -n | uniq -u | sort -R))
 
 
