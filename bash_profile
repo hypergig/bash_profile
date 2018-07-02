@@ -7,21 +7,8 @@
 . $HOME/property_file.sh
 
 
-# terminal hacks
-export CLICOLOR=1
-export LSCOLORS=GxBxCxDxexegedabagaced
-export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
-export HISTSIZE=100000                   # big big history
-export HISTFILESIZE=100000               # big big history
-shopt -s histappend                      # append to history, don't overwrite it
-shopt -s checkwinsize
-
-
 # default vars
-export PATH="/usr/local/opt/python/libexec/bin:$PATH"
-export PATH="/usr/local/bin:$PATH"
 export EDITOR='subl -w'
-export DOCKER_MACHINE_NAME='dev'
 export repos_dir="$HOME/repos"
 export bash_profile_loc="$(dirname $(readlink ${BASH_SOURCE[0]}))"
 export bash_profile_lib_loc="${bash_profile_loc}/lib"
@@ -38,11 +25,11 @@ export FAV_CONTAINERS='alpine:latest
 
 
 # aliases
-alias ll='ls -lahpr'
 alias gr="cd $repos_dir"
 alias ga="cd $repos_dir/$most_common_repo"
 alias jork="${bash_profile_lib_loc}/jork.sh"
 alias reload="source ${BASH_SOURCE[0]}"
+alias copy='xclip -sel clip'
 
 
 # docker functions
@@ -59,7 +46,7 @@ docker-happy-compose(){
 }
 
 docker-reboot(){
-  kill $(ps aux | grep com.docker.hyperkit | grep -v grep | awk '{ print $2 }')
+  sudo systemctl restart docker.service
   sleep 3
   until docker images --all &> /dev/null; do
     echo 'waiting for docker to start'
@@ -81,19 +68,16 @@ docker-nuke(){
   docker-warm &> /dev/null &
 }
 
+docker-watch(){
+  tmux -2 new-session htop\; split-window -v docker stats\; split-window -v  watch -td docker ps\; attach
+}
+
 
 # git bash prompt
-GIT_PROMPT_ONLY_IN_REPO=1
-GIT_PROMPT_THEME=Solarized
-if [ -f "/usr/local/opt/bash-git-prompt/share/gitprompt.sh" ]; then
-  __GIT_PROMPT_DIR="/usr/local/opt/bash-git-prompt/share"
-  source "/usr/local/opt/bash-git-prompt/share/gitprompt.sh"
-fi
-
-
-# bash completion
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
-
+export GIT_PROMPT_ONLY_IN_REPO=1
+export GIT_PROMPT_THEME=Solarized_Ubuntu
+source ~/repos/bash-git-prompt/gitprompt.sh
 
 # my screen
 docker run -t hypergig/parrotsay
+
