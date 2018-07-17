@@ -78,6 +78,9 @@ export GIT_PROMPT_ONLY_IN_REPO=1
 export GIT_PROMPT_THEME=Solarized_Ubuntu
 source ~/repos/bash-git-prompt/gitprompt.sh
 
+# you complete me
+complete -C '/usr/local/bin/aws_completer' aws
+
 # my screen
 docker run -t hypergig/parrotsay
 
