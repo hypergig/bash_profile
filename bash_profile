@@ -29,7 +29,7 @@ alias gr="cd $repos_dir"
 alias ga="cd $repos_dir/$most_common_repo"
 alias jork="${bash_profile_lib_loc}/jork.sh"
 alias reload="source ${BASH_SOURCE[0]}"
-alias copy='xclip -sel clip'
+alias copy='tee /dev/stderr | xclip -sel clip'
 
 
 # docker functions
@@ -69,7 +69,7 @@ docker-nuke(){
 }
 
 docker-watch(){
-  tmux -2 new-session htop\; split-window -v docker stats\; split-window -v  watch -td docker ps\; attach
+  tmux -2 new-session htop -p $(cat /var/run/docker.pid)\; split-window -v docker stats\; split-window -v  watch -td docker ps\; attach
 }
 
 
