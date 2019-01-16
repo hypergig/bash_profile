@@ -1,34 +1,22 @@
 #! /bin/bash
 
+# default vars
+export EDITOR='subl -w'
+_repos_dir="$HOME/repos"
+_bash_profile_loc="$(dirname $(readlink ${BASH_SOURCE[0]}))"
+_bash_profile_lib_loc="${_bash_profile_loc}/lib"
+_fav_containers=(alpine:latest ubuntu:latest debian:latest python:3 hypergig/parrotsay)
+
 # property_file.sh looks like, needs to be in the $HOME directory
 # export private_docker_repo=something.io/this
 # export most_common_repo=foo
 #
-. $HOME/property_file.sh
-
-
-# default vars
-export EDITOR='subl -w'
-export repos_dir="$HOME/repos"
-export bash_profile_loc="$(dirname $(readlink ${BASH_SOURCE[0]}))"
-export bash_profile_lib_loc="${bash_profile_loc}/lib"
-export FAV_CONTAINERS='alpine:latest
-                       busybox:latest
-                       java:latest
-                       jenkins:latest
-                       quay.io/coreos/etcd:latest
-                       python:2
-                       python:3
-                       ethereum/client-go:latest
-                       kylemanna/bitcoind:latest
-                       hypergig/parrotsay'
-
+. $HOME/.property_file.env
 
 # aliases
-alias gr="cd $repos_dir"
-alias ga="cd $repos_dir/$most_common_repo"
-alias jork="${bash_profile_lib_loc}/jork.sh"
-alias reload="source ${BASH_SOURCE[0]}"
+alias gr="cd $_repos_dir"
+alias ga="cd $_repos_dir/$_most_common_repo"
+alias jork="${_bash_profile_lib_loc}/jork.sh"
 alias copy='tee /dev/stderr | xclip -sel clip'
 
 
@@ -38,7 +26,7 @@ docker-dedangle(){
 }
 
 docker-warm(){
-  printf 'docker pull %s\n' $FAV_CONTAINERS | jork | grep 'Status'
+  printf 'docker pull %s\n' ${_fav_containers[@]} | jork | grep 'Status'
 }
 
 docker-happy-compose(){
@@ -75,7 +63,7 @@ docker-watch(){
 
 # git bash prompt
 export GIT_PROMPT_ONLY_IN_REPO=1
-export GIT_PROMPT_THEME=Solarized_Ubuntu
+export GIT_PROMPT_THEME=Minimal
 source ~/repos/bash-git-prompt/gitprompt.sh
 
 # you complete me
