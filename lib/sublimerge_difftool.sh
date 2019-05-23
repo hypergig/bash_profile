@@ -1,5 +1,7 @@
 #! /bin/bash
 
+# cmd = export REMOTE LOCAL && /home/jordan/repos/bash_profile/lib/sublimerge_difftool.sh
+
 set -e
 
 # the window title

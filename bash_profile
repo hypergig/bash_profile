@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -o vi
+
 # default vars
 export EDITOR='subl -w'
 _repos_dir="$HOME/repos"
@@ -68,6 +70,7 @@ source ~/repos/bash-git-prompt/gitprompt.sh
 
 # you complete me
 complete -C '/usr/local/bin/aws_completer' aws
+source <(kubectl completion bash)
 
 # my screen
 docker run -t hypergig/parrotsay
